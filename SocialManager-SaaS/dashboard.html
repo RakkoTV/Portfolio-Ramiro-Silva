@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SocialManager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --primary-color: #6e8efb;
+            --primary-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+            --secondary-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --text-muted: #7f8c8d;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(110, 142, 251, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(110, 142, 251, 0.05);
+        }
+        
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .user-details h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding-top: var(--header-height);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 900;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+        
+        .header-search {
+            flex: 1;
+            margin: 0 20px;
+            position: relative;
+        }
+        
+        .header-search input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            margin-left: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header-icon:hover {
+            background-color: rgba(110, 142, 251, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #e74c3c;
+        }
+        
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+        
+        .dashboard-title {
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-title h2 {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            margin: 0 0 10px;
+        }
+        
+        .dashboard-title p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-icon.followers {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        
+        .stat-icon.engagement {
+            background: linear-gradient(135deg, #2ecc71, #1abc9c);
+        }
+        
+        .stat-icon.reach {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .stat-icon.posts {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .stat-details h3 {
+            font-size: 1.5rem;
+            margin: 0 0 5px;
+            color: var(--secondary-color);
+        }
+        
+        .stat-details p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Content Scheduler */
+        .content-scheduler {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin: 0;
+        }
+        
+        .calendar-view {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: var(--light-bg);
+        }
+        
+        .calendar-day.today {
+            background-color: rgba(110, 142, 251, 0.1);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .calendar-day .day-name {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        
+        .calendar-day .day-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .calendar-day .post-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin: 5px auto 0;
+        }
+        
+        /* Analytics and Recent Posts */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .analytics-card, .recent-posts {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .analytics-chart {
+            height: 300px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .chart-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        .post-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .post-item:last-child {
+            border-bottom: none;
+        }
+        
+        .post-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            background-color: var(--light-bg);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+        
+        .post-details h4 {
+            margin: 0 0 5px;
+            font-size: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .post-details p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        .post-platform {
+            margin-left: auto;
+            font-size: 1.2rem;
+        }
+        
+        .post-platform i.fa-facebook {
+            color: #3b5998;
+        }
+        
+        .post-platform i.fa-instagram {
+            color: #e1306c;
+        }
+        
+        .post-platform i.fa-twitter {
+            color: #1da1f2;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .dashboard-header {
+                left: 0;
+            }
+            
+            .calendar-view {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-placeholder"></div>
+
+    }
+  ]
+}
+```
+    
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Header -->
+        <div class="dashboard-header" id="dashboard-header">
+            <button class="toggle-sidebar" id="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar...">
+            </div>
+            
+            <div class="header-actions">
+                <div class="header-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge"></span>
+                </div>
+                <div class="header-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="header-icon" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <div class="dashboard-title">
+                <h2>Dashboard</h2>
+                <p>Bienvenido de nuevo, Juan. Aquí tienes un resumen de tu actividad reciente.</p>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon followers">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>15,482</h3>
+                        <p>Seguidores totales</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon engagement">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>4.2%</h3>
+                        <p>Tasa de engagement</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon reach">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>28,961</h3>
+                        <p>Alcance semanal</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon posts">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>42</h3>
+                        <p>Publicaciones este mes</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Scheduler -->
+            <div class="content-scheduler">
+                <div class="section-header">
+                    <h3>Calendario de Publicaciones</h3>
+                    <button class="btn btn-primary" onclick="window.location.href='publicaciones.html'">+ Nueva Publicación</button>
+                </div>
+                
+                <div class="calendar-view">
+                    <div class="calendar-day">
+                        <div class="day-name">Lun</div>
+                        <div class="day-number">12</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-name">Mar</div>
+                        <div class="day-number">13</div>
+                        <div class="post-indicator"></div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-name">Mié</div>
+                        <div class="day-number">14</div>
+                        <div class="post-indicator"></div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-name">Jue</div>
+                        <div class="day-number">15</div>
+                    </div>
+                    <div class="calendar-day today">
+                        <div class="day-name">Vie</div>
+                        <div class="day-number">16</div>
+                        <div class="post-indicator"></div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-name">Sáb</div>
+                        <div class="day-number">17</div>
+                    </div>
+                    <div class="calendar-day">
+                        <div class="day-name">Dom</div>
+                        <div class="day-number">18</div>
+                        <div class="post-indicator"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics and Recent Posts -->
+            <div class="dashboard-grid">
+                <div class="analytics-card">
+                    <div class="section-header">
+                        <h3>Rendimiento por Red Social</h3>
+                        <select>
+                            <option>Últimos 7 días</option>
+                            <option>Últimos 30 días</option>
+                            <option>Últimos 90 días</option>
+                        </select>
+                    </div>
+                    
+                    <div class="analytics-chart">
+                        <div class="chart-placeholder">
+                            [Gráfico de rendimiento por red social]
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-posts">
+                    <div class="section-header">
+                        <h3>Publicaciones Recientes</h3>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="post-details">
+                            <h4>Lanzamiento de producto</h4>
+                            <p>Publicado hace 2 horas</p>
+                        </div>
+                        <div class="post-platform">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="post-details">
+                            <h4>Consejos de marketing</h4>
+                            <p>Publicado ayer</p>
+                        </div>
+                        <div class="post-platform">
+                            <i class="fab fa-facebook"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="post-details">
+                            <h4>Actualización de servicio</h4>
+                            <p>Publicado hace 3 días</p>
+                        </div>
+                        <div class="post-platform">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="post-item">
+                        <div class="post-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="post-details">
+                            <h4>Testimonios de clientes</h4>
+                            <p>Publicado hace 5 días</p>
+                        </div>
+                        <div class="post-platform">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si el usuario está autenticado
+            fetch('php/posts.php?action=stats')
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else if (response.status === 302) {
+                        // Redirigir a login si no está autenticado
+                        window.location.href = 'login.html';
+                        throw new Error('No autenticado');
+                    }
+                    throw new Error('Error al cargar datos');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    window.location.href = 'login.html';
+                });
+                
+            // Toggle sidebar en móvil
+            document.getElementById('toggle-sidebar').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+            
+            // Cerrar sesión
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                fetch('php/auth.php', {
+                    method: 'POST',
+                    body: new FormData(Object.assign(document.createElement('form'), {
+                        innerHTML: '<input name="action" value="logout">'
+                    }))
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const dashboardHeader = document.getElementById('dashboard-header');
+            const toggleSidebar = document.getElementById('toggle-sidebar');
+            
+            // Toggle sidebar on mobile
+            toggleSidebar.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Menu item click handler
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // On mobile, close sidebar after clicking a menu item
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Responsive adjustments
+            function handleResize() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // Notification click handler
+            const notificationIcon = document.querySelector('.header-icon:first-child');
+            notificationIcon.addEventListener('click', function() {
+                alert('No tienes notificaciones nuevas');
+            });
+            
+            // Logout handler
+            const logoutIcon = document.querySelector('.header-icon:last-child');
+            logoutIcon.addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // New post button handler
+            const newPostButton = document.querySelector('.content-scheduler .btn-primary');
+            newPostButton.addEventListener('click', function() {
+                alert('Funcionalidad de nueva publicación en desarrollo');
+            });
+        });
+    </script>
+    <script>
+        // Cargar datos del usuario desde la API
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('php/get_user_data.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar la información del usuario en la barra lateral
+                        document.getElementById('user-name').textContent = data.data.first_name + ' ' + data.data.last_name;
+                        document.getElementById('user-plan').textContent = data.data.plan;
+                        document.getElementById('user-initials').textContent = data.data.initials;
+                        
+                        // Si hay una imagen de perfil, mostrarla en lugar de las iniciales
+                        if (data.data.profile_image) {
+                            const avatarElement = document.getElementById('user-avatar');
+                            avatarElement.innerHTML = `<img src="${data.data.profile_image}" alt="Perfil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;                            
+                        }
+                        
+                        // Actualizar también el nombre en el mensaje de bienvenida
+                        const welcomeMessage = document.querySelector('.dashboard-title p');
+                        if (welcomeMessage) {
+                            welcomeMessage.textContent = `Bienvenido de nuevo, ${data.data.first_name}. Aquí tienes un resumen de tu actividad reciente.`;
+                        }
+                    }
+                })
+                .catch(error => console.error('Error al cargar datos del usuario:', error));
+                
+            // Código para el toggle del sidebar
+            document.getElementById('toggle-sidebar').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('main-content').classList.toggle('full-width');
+            });
+            
+            // Código para el botón de logout
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                window.location.href = 'php/logout.php';
+            });
+        });
+    </script>
+    <script>
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-placeholder').innerHTML = data;
+                // Re-attach event listeners or initialize components if needed after loading sidebar
+                
+                // Example: Re-add active class based on current page
+                const currentPage = window.location.pathname.split('/').pop() || 'index.html'; // Default to index.html if root
+                const menuItems = document.querySelectorAll('#sidebar-placeholder .sidebar-menu .menu-item'); // Scope query to placeholder
+                menuItems.forEach(item => {
+                    item.classList.remove('active');
+                    const href = item.getAttribute('href');
+                    if (href === currentPage) {
+                        item.classList.add('active');
+                    }
+                });
+
+                 // Add user data loading and update sidebar elements
+                 fetch('php/get_user_data.php')
+                     .then(response => response.json())
+                     .then(userData => {
+                         if(userData.success && userData.data) {
+                             const userNameElement = document.getElementById('user-name'); // Assumes ID in sidebar.html
+                             const userPlanElement = document.getElementById('user-plan'); // Assumes ID in sidebar.html
+                             const userAvatarElement = document.getElementById('user-avatar'); // Assumes ID in sidebar.html
+                             const userInitialsElement = document.getElementById('user-initials'); // Assumes ID in sidebar.html
+
+                             if(userNameElement) userNameElement.textContent = userData.data.first_name + ' ' + userData.data.last_name;
+                             if(userPlanElement) userPlanElement.textContent = userData.data.plan;
+
+                             // Update avatar/initials within the loaded sidebar
+                             if (userData.data.profile_image) {
+                                 if(userAvatarElement) {
+                                     userAvatarElement.innerHTML = `<img src="${userData.data.profile_image}" alt="Perfil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                                     if(userInitialsElement) userInitialsElement.style.display = 'none'; // Hide initials span if image exists
+                                 }
+                             } else if (userInitialsElement && userData.data.initials) {
+                                 userInitialsElement.textContent = userData.data.initials;
+                                 userInitialsElement.style.display = ''; // Ensure initials span is visible
+                                 if(userAvatarElement) {
+                                     userAvatarElement.style.background = 'var(--primary-gradient)'; // Ensure background is visible
+                                     userAvatarElement.innerHTML = ''; // Clear potential img tag
+                                     userAvatarElement.appendChild(userInitialsElement); // Ensure initials are inside avatar div
+                                 }
+                             } else if (userAvatarElement) {
+                                 // Fallback if no image or initials
+                                 userAvatarElement.textContent = '??';
+                                 userAvatarElement.style.background = 'var(--primary-gradient)';
+                                 userAvatarElement.innerHTML = ''; // Clear potential img tag
+                                 if(userInitialsElement) userInitialsElement.style.display = 'none';
+                             }
+
+                             // Update welcome message in main content (this part might be redundant if already handled elsewhere)
+                             const welcomeMessage = document.querySelector('.dashboard-title p');
+                             if (welcomeMessage) {
+                                 welcomeMessage.textContent = `Bienvenido de nuevo, ${userData.data.first_name}. Aquí tienes un resumen de tu actividad reciente.`;
+                             }
+
+                         } else {
+                             console.error('Error fetching user data:', userData.message || 'Unknown error');
+                             // Optional: Redirect if user data fails (might indicate session expired)
+                             // window.location.href = 'login.html';
+                         }
+                     })
+                     .catch(error => {
+                         console.error('Error fetching user data:', error);
+                         // Optional: Redirect on fetch error
+                         // window.location.href = 'login.html';
+                     });
+
+                 // Re-attach sidebar toggle functionality (assuming toggle button is outside the loaded content)
+                 const toggleSidebarButton = document.getElementById('toggle-sidebar');
+                 const sidebarElement = document.getElementById('sidebar'); // Assumes the loaded sidebar root element has id="sidebar"
+                 if (toggleSidebarButton && sidebarElement) {
+                     // Ensure listener isn't added multiple times if sidebar reloads
+                     if (!toggleSidebarButton.hasAttribute('data-listener-attached')) {
+                         toggleSidebarButton.addEventListener('click', function() {
+                             sidebarElement.classList.toggle('active');
+                         });
+                         toggleSidebarButton.setAttribute('data-listener-attached', 'true');
+                     }
+                 }
+
+                 // Re-attach logout functionality if the button is in the loaded sidebar
+                 const logoutButton = document.getElementById('logout-btn'); // Assumes logout button ID is logout-btn within sidebar.html
+                 if (logoutButton) {
+                     // Ensure listener isn't added multiple times
+                     if (!logoutButton.hasAttribute('data-listener-attached')) {
+                         logoutButton.addEventListener('click', function() {
+                             window.location.href = 'php/logout.php'; 
+                         });
+                         logoutButton.setAttribute('data-listener-attached', 'true');
+                     }
+                 }
+
+            })
+            .catch(error => console.error('Error loading sidebar:', error));
+    </script>
+    <!-- Assuming main.js contains general logic needed after dynamic content potentially loads -->
+    <script src="js/main.js"></script> 
+</body>
+</html>

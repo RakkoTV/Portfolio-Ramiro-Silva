@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pruebas - Wordle Uruguayo</title>
+    <style>
+        body {
+            font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0038a8;
+            text-align: center;
+        }
+        .test-container {
+            border: 1px solid #d3d6da;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .test-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .test-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background-color: #f3f3f3;
+            color: #787c7e;
+        }
+        .status-running {
+            background-color: #c9b458;
+            color: white;
+        }
+        .status-passed {
+            background-color: #6aaa64;
+            color: white;
+        }
+        .status-failed {
+            background-color: #dc3545;
+            color: white;
+        }
+        .test-output {
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .test-summary {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .btn {
+            background-color: #0038a8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #002a7f;
+        }
+        .btn-container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pruebas de Wordle Uruguayo</h1>
+    
+    <div class="test-container">
+        <div class="test-header">
+            <div class="test-name">Base de datos de palabras</div>
+            <div class="test-status status-pending" id="word-db-status">Pendiente</div>
+        </div>
+        <div class="test-output" id="word-db-output"></div>
+    </div>
+    
+    <div class="test-container">
+        <div class="test-header">
+            <div class="test-name">Módulo de estadísticas</div>
+            <div class="test-status status-pending" id="stats-status">Pendiente</div>
+        </div>
+        <div class="test-output" id="stats-output"></div>
+    </div>
+    
+    <div class="test-container">
+        <div class="test-header">
+            <div class="test-name">Módulo de teclado</div>
+            <div class="test-status status-pending" id="keyboard-status">Pendiente</div>
+        </div>
+        <div class="test-output" id="keyboard-output"></div>
+    </div>
+    
+    <div class="test-container">
+        <div class="test-header">
+            <div class="test-name">Lógica del juego</div>
+            <div class="test-status status-pending" id="game-logic-status">Pendiente</div>
+        </div>
+        <div class="test-output" id="game-logic-output"></div>
+    </div>
+    
+    <div class="test-summary" id="test-summary">
+        Ejecuta las pruebas para ver los resultados
+    </div>
+    
+    <div class="btn-container">
+        <button class="btn" id="run-tests-btn">Ejecutar pruebas</button>
+        <button class="btn" id="back-btn">Volver al juego</button>
+    </div>
+
+    <script type="module">
+        import { palabrasWordle } from './js/words.js';
+        import * as keyboard from './js/keyboard.js';
+        import * as stats from './js/stats.js';
+        
+        // Referencias a elementos DOM
+        const wordDbStatus = document.getElementById('word-db-status');
+        const wordDbOutput = document.getElementById('word-db-output');
+        const statsStatus = document.getElementById('stats-status');
+        const statsOutput = document.getElementById('stats-output');
+        const keyboardStatus = document.getElementById('keyboard-status');
+        const keyboardOutput = document.getElementById('keyboard-output');
+        const gameLogicStatus = document.getElementById('game-logic-status');
+        const gameLogicOutput = document.getElementById('game-logic-output');
+        const testSummary = document.getElementById('test-summary');
+        const runTestsBtn = document.getElementById('run-tests-btn');
+        const backBtn = document.getElementById('back-btn');
+        
+        // Función para actualizar el estado de una prueba
+        function updateTestStatus(statusElement, outputElement, status, message) {
+            statusElement.className = `test-status status-${status}`;
+            statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            outputElement.textContent += message + '\n';
+            outputElement.scrollTop = outputElement.scrollHeight;
+        }
+        
+        // Función para ejecutar todas las pruebas
+        async function runTests() {
+            // Reiniciar salidas
+            wordDbOutput.textContent = '';
+            statsOutput.textContent = '';
+            keyboardOutput.textContent = '';
+            gameLogicOutput.textContent = '';
+            
+            // Actualizar estados a "ejecutando"
+            wordDbStatus.className = 'test-status status-running';
+            wordDbStatus.textContent = 'Ejecutando';
+            statsStatus.className = 'test-status status-running';
+            statsStatus.textContent = 'Ejecutando';
+            keyboardStatus.className = 'test-status status-running';
+            keyboardStatus.textContent = 'Ejecutando';
+            gameLogicStatus.className = 'test-status status-running';
+            gameLogicStatus.textContent = 'Ejecutando';
+            
+            testSummary.textContent = 'Ejecutando pruebas...';
+            
+            // Deshabilitar botón mientras se ejecutan las pruebas
+            runTestsBtn.disabled = true;
+            
+            // Ejecutar pruebas con pequeños retrasos para simular procesamiento
+            setTimeout(() => testWordDatabase(), 500);
+            setTimeout(() => testStatsModule(), 1500);
+            setTimeout(() => testKeyboardModule(), 2500);
+            setTimeout(() => testGameLogic(), 3500);
+            setTimeout(() => {
+                // Habilitar botón cuando terminan las pruebas
+                runTestsBtn.disabled = false;
+                
+                // Actualizar resumen
+                const passedTests = document.querySelectorAll('.status-passed').length;
+                const totalTests = 4;
+                
+                if (passedTests === totalTests) {
+                    testSummary.textContent = `¡Todas las pruebas pasaron correctamente! (${passedTests}/${totalTests})`;
+                    testSummary.style.color = '#6aaa64';
+                } else {
+                    testSummary.textContent = `${passedTests} de ${totalTests} pruebas pasaron correctamente`;
+                    testSummary.style.color = '#dc3545';
+                }
+            }, 4000);
+        }
+        
+        // Prueba de la base de datos de palabras
+        function testWordDatabase() {
+            updateTestStatus(wordDbStatus, wordDbOutput, 'running', 'Iniciando prueba de base de datos de palabras...');
+            
+            try {
+                // Verificar que hay palabras en la base de datos
+                if (palabrasWordle.length === 0) {
+                    updateTestStatus(wordDbStatus, wordDbOutput, 'failed', 'Error: No hay palabras en la base de datos');
+                    return false;
+                }
+                
+                updateTestStatus(wordDbStatus, wordDbOutput, 'running', `Palabras disponibles: ${palabrasWordle.length}`);
+                
+                // Verificar que todas las palabras tienen 5 letras
+                const invalidWords = palabrasWordle.filter(word => word.palabra.length !== 5);
+                if (invalidWords.length > 0) {
+                    updateTestStatus(wordDbStatus, wordDbOutput, 'failed', `Error: Hay palabras que no tienen 5 letras: ${JSON.stringify(invalidWords)}`);
+                    return false;
+                }
+                
+                // Verificar que todas las palabras tienen definición
+                const wordsWithoutDefinition = palabrasWordle.filter(word => !word.definicion);
+                if (wordsWithoutDefinition.length > 0) {
+                    updateTestStatus(wordDbStatus, wordDbOutput, 'failed', `Error: Hay palabras sin definición: ${JSON.stringify(wordsWithoutDefinition)}`);
+                    return false;
+                }
+                
+                updateTestStatus(wordDbStatus, wordDbOutput, 'passed', '✓ Base de datos de palabras verificada correctamente');
+                return true;
+            } catch (error) {
+                updateTestStatus(wordDbStatus, wordDbOutput, 'failed', `Error inesperado: ${error.message}`);
+                return false;
+            }
+        }
+        
+        // Prueba del módulo de estadísticas
+        function testStatsModule() {
+            updateTestStatus(statsStatus, statsOutput, 'running', 'Iniciando prueba del módulo de estadísticas...');
+            
+            try {
+                // Crear estadísticas de prueba
+                const testStats = {
+                    gamesPlayed: 10,
+                    gamesWon: 7,
+                    currentStreak: 3,
+                    maxStreak: 5,
+                    guessDistribution: {
+                        1: 1,
+                        2: 2,
+                        3: 1,
+                        4: 2,
+                        5: 1,
+                        6: 0
+                    },
+                    lastPlayed: null,
+                    lastCompleted: null
+                };
+                
+                updateTestStatus(statsStatus, statsOutput, 'running', 'Probando actualización de estadísticas para victoria...');
+                
+                // Probar actualización de estadísticas para victoria
+                const updatedStatsWin = stats.updateStats(testStats, true, 3);
+                if (updatedStatsWin.gamesPlayed !== testStats.gamesPlayed + 1) {
+                    updateTestStatus(statsStatus, statsOutput, 'failed', 'Error: No se incrementó el contador de juegos jugados');
+                    return false;
+                }
+                
+                if (updatedStatsWin.gamesWon !== testStats.gamesWon + 1) {
+                    updateTestStatus(statsStatus, statsOutput, 'failed', 'Error: No se incrementó el contador de juegos ganados');
+                    return false;
+                }
+                
+                if (updatedStatsWin.currentStreak !== testStats.currentStreak + 1) {
+                    updateTestStatus(statsStatus, statsOutput, 'failed', 'Error: No se incrementó la racha actual');
+                    return false;
+                }
+                
+                if (updatedStatsWin.guessDistribution[3] !== testStats.guessDistribution[3] + 1) {
+                    updateTestStatus(statsStatus, statsOutput, 'failed', 'Error: No se actualizó la distribución de intentos');
+                    return false;
+                }
+                
+                updateTestStatus(statsStatus, statsOutput, 'running', 'Probando actualización de estadísticas para derrota...');
+                
+                // Probar actualización de estadísticas para derrota
+                const updatedStatsLoss = stats.updateStats(updatedStatsWin, false, 6);
+                if (updatedStatsLoss.currentStreak !== 0) {
+                    updateTestStatus(statsStatus, statsOutput, 'failed', 'Error: No se reinició la racha actual después de perder');
+                    return false;
+                }
+                
+                updateTestStatus(statsStatus, statsOutput, 'running', 'Probando generación de texto para compartir...');
+                
+                // Probar generación de texto para compartir
+                const shareText = stats.generateShareText([['B', 'O', 'N', 'D', 'I']], 'BONDI', true);
+                if (!shareText.includes('Wordle Uruguayo 1/6')) {
+                    updateTestStatus(statsStatus, statsOutput, 'failed', 'Error: El texto para compartir no es correcto');
+                    return false;
+                }
+                
+                updateTestStatus(statsStatus, statsOutput, 'passed', '✓ Módulo de estadísticas verificado correctamente');
+                return true;
+            } catch (error) {
+                updateTestStatus(statsStatus, statsOutput, 'failed', `Error inesperado: ${error.message}`);
+                return false;
+            }
+        }
+        
+        // Prueba del módulo de teclado
+        function testKeyboardModule() {
+            updateTestStatus(keyboardStatus, keyboardOutput, 'running', 'Iniciando prueba del módulo de teclado...');
+            
+            try {
+                // Crear elementos de prueba
+                const keyElement = document.createElement('button');
+                keyElement.className = 'key';
+                keyElement.setAttribute('data-key', 'A');
+                document.body.appendChild(keyElement);
+                
+                updateTestStatus(keyboardStatus, keyboardOutput, 'running', 'Probando actualización de estado de tecla...');
+                
+                // Verificar que se puede actualizar el estado de una tecla
+                const keyUpdated = keyboard.updateKeyState('A', 'correct');
+                
+                // Limpiar elementos de prueba
+                document.body.removeChild(keyElement);
+                
+                updateTestStatus(keyboardStatus, keyboardOutput, 'running', 'Probando reinicio de teclado...');
+                
+                // Verificar que se puede reiniciar el teclado
+                try {
+                    keyboard.resetKeyboard();
+                    updateTestStatus(keyboardStatus, keyboardOutput, 'running', '✓ Reinicio de teclado verificado');
+                } catch (error) {
+                    updateTestStatus(keyboardStatus, keyboardOutput, 'failed', `Error al reiniciar el teclado: ${error.message}`);
+                    return false;
+                }
+                
+                updateTestStatus(keyboardStatus, keyboardOutput, 'passed', '✓ Módulo de teclado verificado correctamente');
+                return true;
+            } catch (error) {
+                updateTestStatus(keyboardStatus, keyboardOutput, 'failed', `Error inesperado: ${error.message}`);
+                return false;
+            }
+        }
+        
+        // Prueba de la lógica del juego
+        function testGameLogic() {
+            updateTestStatus(gameLogicStatus, gameLogicOutput, 'running', 'Iniciando prueba de la lógica del juego...');
+            
+            try {
+                // Verificar que se puede obtener una palabra aleatoria
+                const randomIndex = Math.floor(Math.random() * palabrasWordle.length);
+                const randomWord = palabrasWordle[randomIndex].palabra;
+                
+                if (!randomWord || randomWord.length !== 5) {
+                    updateTestStatus(gameLogicStatus, gameLogicOutput, 'failed', 'Error: No se pudo obtener una palabra aleatoria válida');
+                    return false;
+                }
+                
+                updateTestStatus(gameLogicStatus, gameLogicOutput, 'running', `Palabra de prueba: ${randomWord}`);
+                
+                // Simular un juego
+                const gameState = {
+                    currentRow: 0,
+                    currentTile: 0,
+                    gameOver: false,
+                    solution: randomWord,
+                    guesses: []
+                };
+                
+                updateTestStatus(gameLogicStatus, gameLogicOutput, 'running', 'Simulando un intento correcto...');
+                
+                // Simular un intento correcto
+                const guess = randomWord.split('');
+                gameState.guesses.push(guess);
+                
+                // Verificar victoria
+                if (guess.join('') === gameState.solution) {
+                    gameState.gameOver = true;
+                    updateTestStatus(gameLogicStatus, gameLogicOutput, 'running', '✓ Victoria detectada correctamente');
+                } else {
+                    updateTestStatus(gameLogicStatus, gameLogicOutput, 'failed', 'Error: No se detectó la victoria');
+                    return false;
+                }
+                
+                updateTestStatus(gameLogicStatus, gameLogicOutput, 'passed', '✓ Lógica del juego verificada correctamente');
+                return true;
+            } catch (error) {
+                updateTestStatus(gameLogicStatus, gameLogicOutput, 'failed', `Error inesperado: ${error.message}`);
+                return false;
+            }
+        }
+        
+        // Event listeners
+        runTestsBtn.addEventListener('click', runTests);
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

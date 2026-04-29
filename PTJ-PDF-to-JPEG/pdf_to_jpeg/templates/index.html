@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor PDF a JPEG</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Convertidor PDF a JPEG</h1>
+        <form id="upload-form" action="/convert" method="post" enctype="multipart/form-data">
+            <label for="file-input" class="file-label">
+                Seleccionar PDFs
+                <input type="file" id="file-input" name="file" accept="application/pdf" required multiple>
+            </label>
+            <button type="submit" class="submit-btn">Convertir</button>
+        </form>
+        <div id="image-gallery" class="image-gallery">
+            <!-- Las imágenes convertidas se mostrarán aquí -->
+        </div>
+        <div id="loading-indicator" style="display: none;">Convirtiendo...</div>
+        <button id="download-all-btn" class="submit-btn" style="display: none; margin-top: 15px;">Descargar Todo</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

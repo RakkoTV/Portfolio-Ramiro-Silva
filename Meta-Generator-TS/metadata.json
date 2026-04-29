@@ -1,0 +1,5 @@
+{
+  "name": "Character Forge AI",
+  "description": "Generate unique video game characters from a name. Each character comes with a portrait, a narrative background, and a list of unique abilities. Click on an ability to visualize it.",
+  "requestFramePermissions": []
+}

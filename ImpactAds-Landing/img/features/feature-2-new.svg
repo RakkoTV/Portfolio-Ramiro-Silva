@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#4f46e5;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="#1e293b" rx="20" ry="20" />
+  <circle cx="400" cy="250" r="150" fill="url(#grad1)" />
+  <g fill="white" opacity="0.9">
+    <path d="M350,200 L450,200 C470,200 470,300 450,300 L350,300 C330,300 330,200 350,200 Z" stroke="white" stroke-width="5" fill="none" />
+    <path d="M370,230 L430,230" stroke="white" stroke-width="6" stroke-linecap="round" />
+    <path d="M370,250 L410,250" stroke="white" stroke-width="6" stroke-linecap="round" />
+    <path d="M370,270 L420,270" stroke="white" stroke-width="6" stroke-linecap="round" />
+    <circle cx="350" cy="200" r="5" fill="white" />
+    <circle cx="450" cy="200" r="5" fill="white" />
+    <circle cx="450" cy="300" r="5" fill="white" />
+    <circle cx="350" cy="300" r="5" fill="white" />
+  </g>
+  <text x="400" y="480" font-family="Arial" font-size="28" font-weight="bold" fill="white" text-anchor="middle">DISEÑO PERSONALIZADO</text>
+  <text x="400" y="520" font-family="Arial" font-size="18" fill="white" text-anchor="middle">Adaptado a su identidad visual</text>
+</svg>

@@ -1,0 +1,105 @@
+/* static/style.css */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea al inicio para ver el contenido */
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    opacity: 0; /* Inicialmente invisible para animación GSAP */
+    transform: translateY(20px); /* Inicialmente desplazado para animación GSAP */
+}
+
+h1 {
+    color: #1a73e8;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+#upload-form {
+    margin-bottom: 30px;
+}
+
+.file-label {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-weight: 500;
+    margin-right: 10px; /* Espacio entre botones */
+}
+
+.file-label:hover {
+    background-color: #d2e3fc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#file-input {
+    display: none; /* Oculta el input real */
+}
+
+.submit-btn {
+    padding: 12px 25px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+    background-color: #1558b0;
+    transform: translateY(-2px);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+#loading-indicator {
+    margin-top: 20px;
+    font-style: italic;
+    color: #555;
+}
+
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.image-gallery img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0; /* Inicialmente invisible para animación GSAP */
+    transform: scale(0.8); /* Inicialmente pequeño para animación GSAP */
+    transition: transform 0.3s ease;
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05); /* Efecto hover */
+}

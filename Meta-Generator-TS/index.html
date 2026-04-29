@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Character Forge AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background-color: #0a0a1a;
+        color: #e0e0e0;
+        overflow-x: hidden;
+      }
+      .font-orbitron {
+        font-family: 'Orbitron', sans-serif;
+      }
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap');
+      .glass-card {
+        background: rgba(10, 25, 47, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 191, 255, 0.2);
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
+      }
+      .neon-text {
+        text-shadow:
+          0 0 5px #00bfff,
+          0 0 10px #00bfff,
+          0 0 20px #00bfff,
+          0 0 40px #00bfff;
+      }
+      .btn-primary {
+        background: linear-gradient(45deg, #00bfff, #1e90ff);
+        border: 1px solid #00bfff;
+        box-shadow: 0 0 10px #00bfff, inset 0 0 5px rgba(255, 255, 255, 0.4);
+        transition: all 0.3s ease;
+      }
+      .btn-primary:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px #00bfff, inset 0 0 10px rgba(255, 255, 255, 0.6);
+      }
+      .btn-primary:disabled {
+        background: #334155;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      @keyframes ken-burns {
+        0% {
+          transform: scale(1.0) translate(0, 0);
+          transform-origin: center center;
+        }
+        100% {
+          transform: scale(1.15) translate(-10px, 5px);
+          transform-origin: center center;
+        }
+      }
+      .animate-ken-burns {
+        animation: ken-burns 15s ease-out alternate infinite;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.9.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

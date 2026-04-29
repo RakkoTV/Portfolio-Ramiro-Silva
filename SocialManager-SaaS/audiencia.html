@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audiencia - SocialManager</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/sidebar.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --primary-color: #6e8efb;
+            --primary-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+            --secondary-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --border-color: #e9ecef;
+            --text-muted: #7f8c8d;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none; /* Added for links */
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(110, 142, 251, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(110, 142, 251, 0.05);
+        }
+        
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .user-details h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding-top: var(--header-height);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            padding: 30px;
+        }
+        
+        /* Header */
+        .dashboard-header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 900;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+        
+        .header-search {
+            flex: 1;
+            margin: 0 20px;
+            position: relative;
+        }
+        
+        .header-search input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        .header-search i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            margin-left: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>SocialManager</h1>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="publicaciones.html" class="menu-item">
+                <i class="fas fa-pen-to-square"></i>
+                <span>Publicaciones</span>
+            </a>
+            <a href="analiticas.html" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Analíticas</span>
+            </a>
+            <a href="audiencia.html" class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Audiencia</span>
+            </a>
+            <a href="comentarios.html" class="menu-item">
+                <i class="fas fa-comments"></i>
+                <span>Comentarios</span>
+            </a>
+            <a href="configuracion.html" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Configuración</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">JD</div>
+                <div class="user-details">
+                    <h4 id="user-name">John Doe</h4>
+                    <p id="user-email">john.doe@example.com</p>
+                </div>
+            </div>
+            <button id="logout-button" class="btn btn-danger" style="width: 100%; margin-top: 15px;">Cerrar Sesión</button>
+        </div>
+    </aside>
+
+    <header class="dashboard-header">
+        <button class="toggle-sidebar" id="toggle-sidebar-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-search">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Buscar...">
+        </div>
+        <div class="header-actions">
+            <div class="header-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="header-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -10px;">
+            <!-- Resumen de audiencia -->
+            <div style="flex: 1; min-width: 300px; padding: 0 10px; margin-bottom: 20px;">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i> Resumen de Audiencia
+                    </div>
+                    <div style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <div style="text-align: center; flex: 1;">
+                                <h3 style="color: var(--primary-color); margin: 0; font-size: 1.8rem;">12,456</h3>
+                                <p style="color: var(--text-muted); margin: 5px 0 0;">Seguidores Totales</p>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <h3 style="color: var(--primary-color); margin: 0; font-size: 1.8rem;">8,320</h3>
+                                <p style="color: var(--text-muted); margin: 5px 0 0;">Seguidores Activos</p>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <h3 style="color: var(--primary-color); margin: 0; font-size: 1.8rem;">67%</h3>
+                                <p style="color: var(--text-muted); margin: 5px 0 0;">Tasa de Engagement</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos demográficos -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Datos Demográficos
+            </div>
+            <div style="padding: 20px;">
+                <div style="display: flex; flex-wrap: wrap;">
+                    <!-- Gráfico de género -->
+                    <div style="flex: 1; min-width: 300px; padding-right: 20px;">
+                        <h4 style="margin-top: 0; color: var(--secondary-color);">Distribución por Género</h4>
+                        <div style="display: flex; height: 200px; align-items: center;">
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                                <div style="background: var(--primary-gradient); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 600;">58%</div>
+                                <p style="margin-top: 10px;">Mujeres</p>
+                            </div>
+                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                                <div style="background: linear-gradient(135deg, #3498db, #2c3e50); width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: 600;">42%</div>
+                                <p style="margin-top: 10px;">Hombres</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Gráfico de edad -->
+                    <div style="flex: 1; min-width: 300px;">
+                        <h4 style="margin-top: 0; color: var(--secondary-color);">Distribución por Edad</h4>
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>18-24 años</span>
+                                <span>35%</span>
+                            </div>
+                            <div style="height: 10px; background-color: #e9ecef; border-radius: 5px;">
+                                <div style="height: 100%; width: 35%; background: var(--primary-gradient); border-radius: 5px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>25-34 años</span>
+                                <span>42%</span>
+                            </div>
+                            <div style="height: 10px; background-color: #e9ecef; border-radius: 5px;">
+                                <div style="height: 100%; width: 42%; background: var(--primary-gradient); border-radius: 5px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>35-44 años</span>
+                                <span>15%</span>
+                            </div>
+                            <div style="height: 10px; background-color: #e9ecef; border-radius: 5px;">
+                                <div style="height: 100%; width: 15%; background: var(--primary-gradient); border-radius: 5px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>45+ años</span>
+                                <span>8%</span>
+                            </div>
+                            <div style="height: 10px; background-color: #e9ecef; border-radius: 5px;">
+                                <div style="height: 100%; width: 8%; background: var(--primary-gradient); border-radius: 5px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ubicación geográfica -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-globe-americas"></i> Ubicación Geográfica
+            </div>
+            <div style="padding: 20px;">
+                <div style="display: flex; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <h4 style="margin-top: 0; color: var(--secondary-color);">Principales Países</h4>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <th style="text-align: left; padding: 10px 5px;">País</th>
+                                <th style="text-align: right; padding: 10px 5px;">Seguidores</th>
+                                <th style="text-align: right; padding: 10px 5px;">Porcentaje</th>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px 5px;"><i class="fas fa-flag" style="color: #e74c3c;"></i> España</td>
+                                <td style="text-align: right; padding: 10px 5px;">5,842</td>
+                                <td style="text-align: right; padding: 10px 5px;">46.9%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px 5px;"><i class="fas fa-flag" style="color: #3498db;"></i> México</td>
+                                <td style="text-align: right; padding: 10px 5px;">2,156</td>
+                                <td style="text-align: right; padding: 10px 5px;">17.3%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px 5px;"><i class="fas fa-flag" style="color: #2ecc71;"></i> Colombia</td>
+                                <td style="text-align: right; padding: 10px 5px;">1,845</td>
+                                <td style="text-align: right; padding: 10px 5px;">14.8%</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px 5px;"><i class="fas fa-flag" style="color: #f39c12;"></i> Argentina</td>
+                                <td style="text-align: right; padding: 10px 5px;">1,324</td>
+                                <td style="text-align: right; padding: 10px 5px;">10.6%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 5px;"><i class="fas fa-flag" style="color: #9b59b6;"></i> Otros</td>
+                                <td style="text-align: right; padding: 10px 5px;">1,289</td>
+                                <td style="text-align: right; padding: 10px 5px;">10.4%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intereses de la audiencia -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-tags"></i> Intereses de la Audiencia
+            </div>
+            <div style="padding: 20px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Tecnología (78%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Marketing Digital (65%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Redes Sociales (92%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Diseño Web (54%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">E-commerce (47%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Emprendimiento (72%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Innovación (63%)</span>
+                    <span style="background-color: rgba(110, 142, 251, 0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">Desarrollo Personal (58%)</span>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Script para manejar la lógica del dashboard (puede ir en main.js)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos del usuario
+            const userName = localStorage.getItem('userName');
+            const userEmail = localStorage.getItem('userEmail');
+            if (userName && userEmail) {
+                document.getElementById('user-name').textContent = userName;
+                document.getElementById('user-email').textContent = userEmail;
+                const initials = userName.split(' ').map(n => n[0]).join('');
+                document.querySelector('.user-avatar').textContent = initials;
+            }
+
+            // Logout
+            const logoutButton = document.getElementById('logout-button');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function() {
+                    fetch('php/auth.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'action=logout'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            localStorage.removeItem('userName');
+                            localStorage.removeItem('userEmail');
+                            window.location.href = 'login.html';
+                        } else {
+                            alert('Error al cerrar sesión');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error de conexión al cerrar sesión.');
+                    });
+                });
+            }
+            
+            // Toggle sidebar (si se implementa)
+            const toggleBtn = document.getElementById('toggle-sidebar-btn');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const header = document.querySelector('.dashboard-header');
+
+            if (toggleBtn && sidebar && mainContent && header) {
+                toggleBtn.addEventListener('click', () => {
+                    sidebar.style.left = sidebar.style.left === '-250px' ? '0' : '-250px';
+                    mainContent.style.marginLeft = mainContent.style.marginLeft === '0px' ? '250px' : '0px';
+                    header.style.left = header.style.left === '0px' ? '250px' : '0px';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

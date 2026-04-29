@@ -1,0 +1,23 @@
+Información del Sistema
+=====================
+Generado: 2025-04-01 01:27:04
+
+
+Sistema:
+--------
+Sistema Operativo   : Linux
+Version SO          : Linux martina.servidorlinux21.com 4.18.0-513.18.1.lve.2.el8.x86_64 #1 SMP Sat Mar 30 15:36:11 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
+Directorio Actual   : /home2/rakkotech/public_html/Referencia/4
+
+PHP:
+----
+PHP                 : 8.3.17
+PHP SAPI            : litespeed
+Memoria Límite PHP : 128M
+Max Execution Time  : 30 segundos
+
+Herramientas:
+-------------
+Python              : Python 3.6.8
+yt-dlp              : 2022.01.21
+yt-dlp Path         : /home2/rakkotech/public_html/Referencia/4/yt-dlp

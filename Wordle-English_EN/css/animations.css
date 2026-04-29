@@ -1,0 +1,181 @@
+/* animations.css - Animaciones para Wordle Uruguayo */
+
+/* Animación de flip para las letras */
+@keyframes flip-in {
+  0% {
+    transform: rotateX(0);
+  }
+  100% {
+    transform: rotateX(90deg);
+  }
+}
+
+@keyframes flip-out {
+  0% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+.tile[data-animation="flip-in"] {
+  animation: flip-in 0.25s ease-in;
+  transform-style: preserve-3d;
+}
+
+.tile[data-animation="flip-out"] {
+  animation: flip-out 0.25s ease-out;
+  transform-style: preserve-3d;
+}
+
+/* Animación de sacudida para fila inválida */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(-5px); }
+  20% { transform: translateX(5px); }
+  30% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  60% { transform: translateX(5px); }
+  70% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  90% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.board-row.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Animación de pop para letras al escribir */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.tile[data-state="active"] {
+  animation: pop 0.1s ease-in-out;
+}
+
+/* Animación de pulsación para teclas */
+@keyframes key-press {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.key:active {
+  animation: key-press 0.1s ease-in-out;
+}
+
+/* Animación de aparición para modales */
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.modal {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+/* Animación para el contenido del modal */
+@keyframes slide-up {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.modal-content {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* Animación para el toast */
+@keyframes toast-in {
+  0% { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+  100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.toast.show {
+  animation: toast-in 0.3s ease-out;
+}
+
+/* Animación de victoria */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-20px); }
+  60% { transform: translateY(-10px); }
+}
+
+.victory-animation .tile[data-state="correct"] {
+  animation: bounce 1s ease-in-out;
+}
+
+/* Animación para cambio de tema */
+.container, header, .modal-content, .tile, .key {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Animación para el botón de compartir */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.primary-button:hover {
+  animation: pulse 1s infinite;
+}
+
+/* Animación para la cuenta regresiva */
+@keyframes tick {
+  0% { transform: scale(1); }
+  10% { transform: scale(1.1); }
+  20% { transform: scale(1); }
+}
+
+#countdown, #game-over-countdown {
+  animation: tick 1s linear infinite;
+}
+
+/* Animación para las barras de distribución de intentos */
+@keyframes grow-right {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+.guess-bar {
+  animation: grow-right 1s ease-out;
+}
+
+/* Animación para el título */
+@keyframes color-cycle {
+  0% { color: var(--color-primary); }
+  50% { color: var(--color-secondary); }
+  100% { color: var(--color-primary); }
+}
+
+h1 {
+  animation: color-cycle 5s infinite;
+}
+
+/* Animación para el fondo del modal de victoria */
+@keyframes confetti {
+  0% { background-position: 0 0; }
+  100% { background-position: 100px 100px; }
+}
+
+.modal-content.victory {
+  background-image: linear-gradient(
+    45deg,
+    var(--color-background) 25%,
+    var(--color-surface) 25%,
+    var(--color-surface) 50%,
+    var(--color-background) 50%,
+    var(--color-background) 75%,
+    var(--color-surface) 75%,
+    var(--color-surface)
+  );
+  background-size: 10px 10px;
+  animation: confetti 2s linear infinite;
+}

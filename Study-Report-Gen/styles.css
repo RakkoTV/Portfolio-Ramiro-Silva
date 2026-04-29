@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f5f7fa;
+    color: #2d3748;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+h1 {
+    color: #2b6cb0;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    color: #4a5568;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+section {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+#language-select {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: white;
+    min-width: 150px;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.primary {
+    background-color: #4299e1;
+    color: white;
+}
+
+.primary:hover:not(:disabled) {
+    background-color: #2b6cb0;
+}
+
+.secondary {
+    background-color: #a0aec0;
+    color: white;
+}
+
+.secondary:hover:not(:disabled) {
+    background-color: #718096;
+}
+
+.audio-status {
+    padding: 1rem;
+    background-color: #edf2f7;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.transcription-container, .study-container {
+    margin: 1rem 0;
+}
+
+#transcription-text {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 5px;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.study-content {
+    min-height: 300px;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 5px;
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+.audio-upload {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.audio-player-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #edf2f7;
+    border-radius: 5px;
+}
+
+.error {
+    color: #e53e3e;
+    padding: 1rem;
+    background-color: #fff5f5;
+    border-radius: 5px;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #edf2f7;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    background-color: #4299e1;
+    transition: width 0.3s ease;
+}

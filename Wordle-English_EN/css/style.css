@@ -1,0 +1,530 @@
+/* style.css - Estilos principales para Wordle Uruguayo */
+
+/* Variables y configuración general */
+:root {
+  /* Colores inspirados en la bandera uruguaya */
+  --color-background: #ffffff;
+  --color-surface: #f3f3f3;
+  --color-primary: #0038a8; /* Azul de la bandera uruguaya */
+  --color-secondary: #fcd116; /* Amarillo del sol de la bandera */
+  --color-text: #1a1a1b;
+  --color-text-light: #787c7e;
+  
+  /* Colores de estado de las letras */
+  --color-correct: #6aaa64;
+  --color-present: #c9b458;
+  --color-absent: #787c7e;
+  
+  /* Colores de interfaz */
+  --color-border: #d3d6da;
+  --color-key: #d3d6da;
+  --color-key-text: #1a1a1b;
+  --color-toast-background: rgba(0, 0, 0, 0.9);
+  --color-toast-text: #ffffff;
+  --color-modal-overlay: rgba(0, 0, 0, 0.5);
+  
+  /* Tamaños */
+  --header-height: 50px;
+  --keyboard-height: 200px;
+  --tile-size: 62px;
+  --tile-gap: 5px;
+  --key-height: 58px;
+  --key-width: 43px;
+  --key-gap: 6px;
+  --border-radius: 4px;
+  
+  /* Fuentes */
+  --font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  
+  /* Animaciones */
+  --animation-duration: 0.5s;
+}
+
+/* Tema oscuro */
+body.dark-theme {
+  --color-background: #121213;
+  --color-surface: #1a1a1b;
+  --color-text: #ffffff;
+  --color-text-light: #d7dadc;
+  --color-border: #3a3a3c;
+  --color-key: #818384;
+  --color-key-text: #ffffff;
+}
+
+/* Estilos generales */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Encabezado */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: var(--header-height);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 10px;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  flex-grow: 1;
+  text-align: center;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--color-text);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+  background-color: var(--color-surface);
+}
+
+/* Área principal */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+  width: 100%;
+  padding: 10px 0;
+  overflow-y: auto;
+}
+
+/* Tablero de juego */
+#game-board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tile-gap);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.board-row {
+  display: flex;
+  gap: var(--tile-gap);
+}
+
+.tile {
+  width: var(--tile-size);
+  height: var(--tile-size);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* Estados de las casillas */
+.tile[data-state="empty"] {
+  border: 2px solid var(--color-border);
+}
+
+.tile[data-state="active"] {
+  border: 2px solid var(--color-primary);
+}
+
+.tile[data-state="correct"] {
+  background-color: var(--color-correct);
+  border-color: var(--color-correct);
+  color: white;
+}
+
+.tile[data-state="present"] {
+  background-color: var(--color-present);
+  border-color: var(--color-present);
+  color: white;
+}
+
+.tile[data-state="absent"] {
+  background-color: var(--color-absent);
+  border-color: var(--color-absent);
+  color: white;
+}
+
+/* Teclado */
+#keyboard {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: var(--key-gap);
+  margin-bottom: var(--key-gap);
+}
+
+.key {
+  height: var(--key-height);
+  border-radius: var(--border-radius);
+  background-color: var(--color-key);
+  color: var(--color-key-text);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  user-select: none;
+  flex: 1;
+}
+
+.key[data-special="true"] {
+  font-size: 12px;
+  min-width: 65px;
+}
+
+.key[data-state="correct"] {
+  background-color: var(--color-correct);
+  color: white;
+}
+
+.key[data-state="present"] {
+  background-color: var(--color-present);
+  color: white;
+}
+
+.key[data-state="absent"] {
+  background-color: var(--color-absent);
+  color: white;
+}
+
+.spacer {
+  flex: 0.5;
+}
+
+/* Modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-modal-overlay);
+}
+
+/* Estilos para el modal de pista */
+.hint-text {
+    font-size: 1.1em;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius);
+    display: none;
+}
+
+.hint-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    cursor: pointer;
+    background-color: var(--color-primary);
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+.button.secondary {
+    background-color: var(--color-text-light);
+}
+
+/* Modal base */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-modal-overlay);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: var(--color-background);
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+/* Ejemplos en el modal de instrucciones */
+.examples {
+  margin: 20px 0;
+}
+
+.example {
+  margin-bottom: 16px;
+}
+
+.example-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.example .tile {
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+}
+
+/* Estadísticas */
+.stats-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--color-text-light);
+}
+
+.guess-distribution {
+  margin: 20px 0;
+}
+
+.guess-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.guess-label {
+  width: 20px;
+  text-align: right;
+  margin-right: 8px;
+  font-weight: var(--font-weight-bold);
+}
+
+.guess-bar {
+  background-color: var(--color-absent);
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  min-width: 20px;
+}
+
+.countdown-timer {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#countdown, #game-over-countdown {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.share-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.primary-button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.primary-button:hover {
+  background-color: #002a7f; /* Azul más oscuro */
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-toast-background);
+  color: var(--color-toast-text);
+  padding: 16px;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  text-align: center;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* Definición de palabra */
+#word-definition-container {
+  background-color: var(--color-surface);
+  padding: 16px;
+  border-radius: var(--border-radius);
+  margin: 16px 0;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  :root {
+    --tile-size: 50px;
+    --key-height: 50px;
+    --key-width: 30px;
+  }
+  
+  h1 {
+    font-size: 20px;
+  }
+  
+  .tile {
+    font-size: 28px;
+  }
+  
+  .key {
+    font-size: 12px;
+  }
+  
+  .key[data-special="true"] {
+    font-size: 10px;
+    min-width: 50px;
+  }
+}
+
+@media (max-width: 350px) {
+  :root {
+    --tile-size: 45px;
+    --key-height: 45px;
+  }
+  
+  h1 {
+    font-size: 18px;
+  }
+  
+  .tile {
+    font-size: 24px;
+  }
+  
+  .key {
+    font-size: 11px;
+  }
+}
